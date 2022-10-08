@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->string('title');
             $table->text('description');
+            $table->integer("points")->nullable();
             $table->string('slug')->unique();
             $table->timestamps();
         });

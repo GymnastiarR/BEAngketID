@@ -9,6 +9,8 @@ use App\Models\Activity;
 use App\Models\Option;
 use App\Models\Question;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Form;
+use App\Models\User;
 
 class AnswearController extends Controller
 {
@@ -41,13 +43,16 @@ class AnswearController extends Controller
     public function store(StoreAnswearRequest $request)
     {
 
-        // return "ok";
 
         $request->validate([
             "form_id" => "required",
             "options.*.question_id" => "required",
             "options.*.answear" => "required",
         ]);
+
+        if($request->form_id == Auth::id()){
+            return \response()->json(["message" => "Pemiliki tidak diperbolehkan mengisi angket yang dimiliki"]);
+        }
         
         $activity = Activity::create([
             "user_id" => Auth::id(),
@@ -76,6 +81,16 @@ class AnswearController extends Controller
             }
             
         }
+
+        $form =  Form::find($request->form_id);
+
+        $user = User::find(Auth::id());
+        $user->points = $user->points + $form->points;
+        $user->save();
+
+        $user = User::find($form->user_id);
+        $user->points = $user->points - $form->points;
+        $user->save();
 
         return \response()->json(["pesan" => "Jawaban telah dikirim"]);
 

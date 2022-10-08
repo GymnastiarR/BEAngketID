@@ -23,18 +23,10 @@ class FormController extends Controller
      */
     public function index()
     {
-        
-        // return Auth::id();
 
         $forms = DB::table('forms')->where('user_id', Auth::id())->paginate(8);
 
-        // return $forms;
-
-        // $forms = DB::table('forms')->paginate(5);
-
-        // $forms = Form::all();
-
-        return \response()->json($forms, 200);
+        return \response()->json($forms);
     }
 
     /**
@@ -59,6 +51,7 @@ class FormController extends Controller
         $request->validate([
             'title' => 'required|max:255',
             'description' => 'required',
+            'point' => 'nullable|beetwen:10,20',
             'questions.*.content' => 'required',
             'questions.*.tipe' => 'required|numeric'
             // 'questions.*.options.*' => 'required'
@@ -75,6 +68,7 @@ class FormController extends Controller
         $form = Form::create([
             'title' => $request->title,
             'user_id' => Auth::id(),
+            'points' => $request->points,
             'description' => $request->description,
             'slug' => $slug
         ]);
