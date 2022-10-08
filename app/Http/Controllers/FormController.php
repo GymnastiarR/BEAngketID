@@ -51,9 +51,9 @@ class FormController extends Controller
         $request->validate([
             'title' => 'required|max:255',
             'description' => 'required',
-            'point' => 'nullable|beetwen:10,20',
+            'points' => 'numeric|nullable|between:10,20',
             'questions.*.content' => 'required',
-            'questions.*.tipe' => 'required|numeric'
+            'questions.*.tipe' => 'required|numeric|between:1,3'
             // 'questions.*.options.*' => 'required'
         ]);
 
