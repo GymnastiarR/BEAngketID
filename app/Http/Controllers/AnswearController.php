@@ -43,14 +43,13 @@ class AnswearController extends Controller
     public function store(StoreAnswearRequest $request)
     {
 
-
         $request->validate([
             "form_id" => "required",
             "options.*.question_id" => "required",
             "options.*.answear" => "required",
         ]);
 
-        if($request->form_id == Auth::id()){
+        if(Form::where('id', $request->form_id)->get('user_id') == Auth::id()){
             return \response()->json(["message" => "Pemiliki tidak diperbolehkan mengisi angket yang dimiliki"]);
         }
         
@@ -71,7 +70,6 @@ class AnswearController extends Controller
                 continue;
             }
 
-            
             foreach($option['answear'] as $answear){
                 Answear::create([
                     "activity_id" => $activity->id,
@@ -90,6 +88,11 @@ class AnswearController extends Controller
 
         $user = User::find($form->user_id);
         $user->points = $user->points - $form->points;
+
+        // if($user->points < 0){
+            
+        // }
+
         $user->save();
 
         return \response()->json(["pesan" => "Jawaban telah dikirim"]);

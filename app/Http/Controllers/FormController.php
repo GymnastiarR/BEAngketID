@@ -23,7 +23,6 @@ class FormController extends Controller
      */
     public function index()
     {
-
         $forms = DB::table('forms')->where('user_id', Auth::id())->paginate(8);
 
         return \response()->json($forms);
