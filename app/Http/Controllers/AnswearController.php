@@ -42,12 +42,12 @@ class AnswearController extends Controller
      */
     public function store(StoreAnswearRequest $request)
     {
-
-        $request->validate([
-            "form_id" => "required",
-            "options.*.question_id" => "required",
-            "options.*.answear" => "required",
-        ]);
+        
+        // $request->validate([
+        //     "form_id" => "required",
+        //     "options.*.question_id" => "required",
+        //     "options.*.answear" => "required",
+        // ]);
 
         if(Form::where('id', $request->form_id)->get('user_id') == Auth::id()){
             return \response()->json(["message" => "Pemiliki tidak diperbolehkan mengisi angket yang dimiliki"]);
@@ -88,6 +88,15 @@ class AnswearController extends Controller
 
         $user = User::find($form->user_id);
         $user->points = $user->points - $form->points;
+
+        if($user->point < 0){
+            $forms = Form::where('user_id', $user->id);
+            foreach($forms as $form){
+                $form = Form::find($form->id);
+                $form->points = "";
+                $form->save();
+            }
+        }
 
         // if($user->points < 0){
             

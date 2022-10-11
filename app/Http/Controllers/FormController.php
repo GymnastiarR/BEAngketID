@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\QuestionController;
 use Dotenv\Validator as DotenvValidator;
 use Exception;
+use FormStore;
 use Illuminate\Support\Facades\Validator;
 
 class FormController extends Controller
@@ -48,46 +49,16 @@ class FormController extends Controller
     public function store(StoreFormRequest $request)
     {
 
-        $request->validate([
-            'title' => 'required|max:255',
-            'description' => 'required',
-            'points' => 'numeric|nullable|between:10,20',
-            'questions.*.content' => 'required',
-            'questions.*.tipe' => 'required|numeric|between:1,3'
-            // 'questions.*.options.*' => 'required'
-        ]);
-
         $slug = Slug::create();
-
-        $form = Form::create([
-            'title' => $request->title,
-            'user_id' => Auth::id(),
-            'points' => $request->points,
-            'description' => $request->description,
-            'slug' => $slug
-        ]);
-
-        foreach($request->questions as $question){
-
-            $quest = Question::create([
-                'content' => $question['content'],
-                'tipe' => $question['tipe'],
-                'form_id' => $form->id
-            ]);
-
-            if(!$question['options']){
-                continue;
-            }
-            foreach($question['options'] as $option){
-                Option::create([
-                    'content' => $option,
-                    'question_id' => $quest->id
-                ]);
-            }
-        }
         
-        return \response()->json($form);
+        return \response()->json(FormStore::store($request, $slug, 1));
 
+    }
+
+    public function storeDraft(StoreFormRequest $request){
+        $slug = Slug::create();
+        
+        return \response()->json(FormStore::store($request, $slug, \null));
     }
 
     /**
@@ -98,8 +69,9 @@ class FormController extends Controller
      */
     public function show(Form $form)
     {
+        // return $form;
 
-        $form = Form::with('questions.options')->find($form);
+        $form = Form::with('questions.options')->where('slug', $form->slug)->get();
 
         return \response()->json($form);
 
@@ -136,8 +108,11 @@ class FormController extends Controller
      */
     public function destroy(Form $form)
     {
-        Form::destroy($form->id);
+        if($form->user_id != Auth::id()){
+            return \response()->json(['status' => 'error', 'message' => 'Tidak bisa menghapus form']);
+        }
 
+        Form::destroy($form->id);
         return \response()->json(['message' => 'Form Deleted'], 200);
     }
 }

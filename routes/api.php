@@ -23,19 +23,27 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware('auth:sanctum')->post('/form', [FormController::class, 'store']);
 
 Route::middleware('auth:sanctum')->post('/send', [AnswearController::class, 'store']);
 
-Route::middleware('auth:sanctum')->get('/send', [AnswearController::class, 'store']);
+// Route::middleware('auth:sanctum')->get('/send', [AnswearController::class, 'store']);
 
-Route::middleware('auth:sanctum')->get('/form', [FormController::class, 'index']);
 
 // Route::middleware('auth:sanctum')->post('/question', [QuestionController::class, 'store']);
+
+//Form CRUD
 
 Route::middleware('auth:sanctum')->get('/form/{form:slug}', [FormController::class, 'show']);
 
 Route::middleware('auth:sanctum')->delete('/form/{form}', [FormController::class, 'destroy']);
+
+Route::middleware('auth:sanctum')->post('/form', [FormController::class, 'store']);
+
+Route::middleware('auth:sanctum')->post('/form/draft', [FormController::class, 'storeDraft']);
+
+Route::middleware('auth:sanctum')->get('/form', [FormController::class, 'index']);
+
+//Response
 
 Route::middleware('auth:sanctum')->get('/response/{slug}', [ResponseController::class, 'show']);
 

@@ -196,6 +196,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\FortifyServiceProvider::class,
         App\Providers\SlugServiceProvider::class,
+        App\Providers\FormStoreServiceProvider::class,
 
     ],
 

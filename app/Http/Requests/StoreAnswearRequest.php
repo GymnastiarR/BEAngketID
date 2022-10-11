@@ -24,7 +24,9 @@ class StoreAnswearRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            "form_id" => "required",
+            "options.*.question_id" => "required",
+            "options.*.answear" => "required",
         ];
     }
 }

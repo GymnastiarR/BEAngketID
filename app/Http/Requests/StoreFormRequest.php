@@ -24,7 +24,12 @@ class StoreFormRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'title' => 'required|max:255',
+            'description' => 'required',
+            'points' => 'numeric|nullable|between:10,20',
+            'questions.*.content' => 'required',
+            'questions.*.tipe' => 'required|numeric|between:1,3'
+            // 'questions.*.options.*' => 'required'
         ];
     }
 }
