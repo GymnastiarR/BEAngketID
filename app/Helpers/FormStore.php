@@ -20,22 +20,18 @@ class FormStore{
 
         if($isPublish){
             $data['isPublish'] = '1';
-            return "here";
         }
 
         $form = Form::create($data);
 
         foreach($request->questions as $question){
 
-            $quest = Question::create([
-                'content' => $question['content'],
-                'tipe' => $question['tipe'],
-                'form_id' => $form->id
-            ]);
+            $quest = self::storeQuestion($question, $form);
 
             if(!$question['options']){
                 continue;
             }
+
             foreach($question['options'] as $option){
                 Option::create([
                     'content' => $option,
@@ -45,5 +41,13 @@ class FormStore{
         }
 
         return $form;
+    }
+
+    private static function storeQuestion($question, $form){
+        return Question::create([
+            'content' => $question['content'],
+            'tipe' => $question['tipe'],
+            'form_id' => $form->id
+        ]);
     }
 }

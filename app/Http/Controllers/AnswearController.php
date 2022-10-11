@@ -21,7 +21,8 @@ class AnswearController extends Controller
      */
     public function index()
     {
-        
+        return Form::where('isPublish', 1)->where('user_id', '!=', Auth::id())->get();
+
     }
 
     /**
@@ -42,7 +43,7 @@ class AnswearController extends Controller
      */
     public function store(StoreAnswearRequest $request)
     {
-        
+
         // $request->validate([
         //     "form_id" => "required",
         //     "options.*.question_id" => "required",

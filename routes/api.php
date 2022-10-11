@@ -26,6 +26,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware('auth:sanctum')->post('/send', [AnswearController::class, 'store']);
 
+Route::middleware('auth:sanctum')->get('/all', [AnswearController::class, 'index']);
+
 // Route::middleware('auth:sanctum')->get('/send', [AnswearController::class, 'store']);
 
 
