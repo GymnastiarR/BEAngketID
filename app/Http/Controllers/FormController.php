@@ -6,8 +6,6 @@ use App\Helpers\Slug;
 use App\Models\Form;
 use App\Http\Requests\StoreFormRequest;
 use App\Http\Requests\UpdateFormRequest;
-use App\Models\Option;
-use App\Models\Question;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\QuestionController;
@@ -71,7 +69,7 @@ class FormController extends Controller
     {
         // return $form;
 
-        $form = Form::with('questions.options')->where('slug', $form->slug)->get();
+        $form = Form::with(['questions.options', 'age'])->where('slug', $form->slug)->get();
 
         return \response()->json($form);
 

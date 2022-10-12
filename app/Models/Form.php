@@ -23,4 +23,8 @@ class Form extends Model
         return $this->hasMany(Activity::class);
     }
 
+    public function age(){
+        return $this->belongsTo(Age::class);
+    }
+
 }

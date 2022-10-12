@@ -16,9 +16,11 @@ return new class extends Migration
         Schema::create('forms', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('age_id')->nullable()->constrained('ages');
+            $table->set('status', ['Lajang', 'Menikah'])->nullable();
             $table->string('title');
             $table->text('description');
-            $table->boolean('isPublish')->default(0);
+            $table->timestamp('publish_at')->nullable();
             $table->integer("points")->nullable();
             $table->string('slug')->unique();
             $table->timestamps();

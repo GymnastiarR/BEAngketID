@@ -5,24 +5,38 @@ use App\Models\Form;
 use App\Models\Question;
 use App\Models\Option;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Age;
 
 class FormStore{
 
     public static function store($request, $slug, $isPublish){
+
+        // return $request;
+
+        $age = Age::create([
+            'from' => $request->age['from'],
+            'to' => $request->age['to'],
+        ]);
 
         $data = [
             'title' => $request->title,
             'user_id' => Auth::id(),
             'points' => $request->points,
             'description' => $request->description,
-            'slug' => $slug
+            'slug' => $slug,
+            'age_id' => $age->id,
+            'status' => $request->status
         ];
 
         if($isPublish){
-            $data['isPublish'] = '1';
+            $data['publish_at'] = now();
         }
 
+        // return $data;
+
         $form = Form::create($data);
+
+        // return $form;
 
         foreach($request->questions as $question){
 

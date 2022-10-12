@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AnswearController;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\Profile;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ResponseController;
 use App\Models\Answear;
@@ -48,6 +49,10 @@ Route::middleware('auth:sanctum')->get('/form', [FormController::class, 'index']
 //Response
 
 Route::middleware('auth:sanctum')->get('/response/{slug}', [ResponseController::class, 'show']);
+
+//Profile CRUD
+Route::middleware('auth:sanctum')->put('/profile/{profile}', [Profile::class, 'update']);
+Route::middleware('auth:sanctum')->get('/profile', [Profile::class, 'index']);
 
 
 Route::get('/ujicoba', function(){

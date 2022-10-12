@@ -21,8 +21,19 @@ class AnswearController extends Controller
      */
     public function index()
     {
-        return Form::where('isPublish', 1)->where('user_id', '!=', Auth::id())->get();
+        $forms = Form::with(['age'])->where('publiah_at', '!=', \null)->where('user_id', '!=', Auth::id())->get();
 
+        // $result = $forms->where('age.from', '<=', Auth::user()->age)->where('age.to', '>=', Auth::user()->age);
+        // $result->merge($forms->where('age', \null));
+
+        $result = $forms->filter(function($value, $key){
+            return ((($value->age == \null) || ($value->age->from <= Auth::user()->age && $value->age->to >= Auth::user()->age)) 
+                && ($value->status == Auth::user()->status || $value->status == \null ));
+        });
+        // $result->merge($forms)
+
+        return $result->all();
+        
     }
 
     /**
