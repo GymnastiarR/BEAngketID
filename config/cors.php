@@ -19,6 +19,7 @@ return [
     'login',
     'register',
     'logout',
+    'email/verify/*',
     'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'],

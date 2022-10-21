@@ -85,7 +85,7 @@ class VerifyEmail extends Notification
         // return \dd(Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)));
 
 
-        $url = URL::temporarySignedRoute(
+         $url =  URL::temporarySignedRoute(
             'verification.verify',
             Carbon::now()->addMinutes(Config::get('auth.verification.expire', 60)),
             [
@@ -94,7 +94,7 @@ class VerifyEmail extends Notification
             ]
         );
 
-        return \str_replace('localhost:8000', 'localhost:8080', $url);
+        return \str_replace('localhost:8000', 'localhost:5173', $url);
 
     }
 
