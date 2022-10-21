@@ -27,11 +27,13 @@ class StoreFormRequest extends FormRequest
             'title' => 'required|max:255',
             'description' => 'required',
             'points' => 'numeric|nullable|between:10,20',
-            'age.from' => 'numeric', //For Restriction
-            'age.to' => 'numeric', //For Restriction
+            'age.from' => 'numeric|nullable', //For Restriction
+            'age.to' => 'numeric|nullable', //For Restriction
+            'status' => 'in:Menikah,Lajang|nullable',
+            'education_id' => 'between:1,3',
             'questions.*.content' => 'required',
-            'questions.*.tipe' => 'required|numeric|between:1,3'
-            // 'questions.*.options.*' => 'required'
+            'questions.*.type' => 'required|numeric|between:1,3',
+            'questions.*.options.*.content' => 'required'
         ];
     }
 }

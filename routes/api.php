@@ -46,12 +46,15 @@ Route::middleware('auth:sanctum')->post('/form/draft', [FormController::class, '
 
 Route::middleware('auth:sanctum')->get('/form', [FormController::class, 'index']);
 
+Route::middleware('auth:sanctum')->post('/form/point', [FormController::class, 'changePoint']);
+
 //Response
 
 Route::middleware('auth:sanctum')->get('/response/{slug}', [ResponseController::class, 'show']);
 
 //Profile CRUD
 Route::middleware('auth:sanctum')->put('/profile/{profile}', [Profile::class, 'update']);
+
 Route::middleware('auth:sanctum')->get('/profile', [Profile::class, 'index']);
 
 

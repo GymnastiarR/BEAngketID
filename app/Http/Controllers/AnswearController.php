@@ -21,14 +21,15 @@ class AnswearController extends Controller
      */
     public function index()
     {
-        $forms = Form::with(['age'])->where('publiah_at', '!=', \null)->where('user_id', '!=', Auth::id())->get();
+        $forms = Form::with(['age'])->where('publish_at', '!=', \null)->where('user_id', '!=', Auth::id())->get();
 
         // $result = $forms->where('age.from', '<=', Auth::user()->age)->where('age.to', '>=', Auth::user()->age);
         // $result->merge($forms->where('age', \null));
 
         $result = $forms->filter(function($value, $key){
             return ((($value->age == \null) || ($value->age->from <= Auth::user()->age && $value->age->to >= Auth::user()->age)) 
-                && ($value->status == Auth::user()->status || $value->status == \null ));
+                && ($value->status == Auth::user()->status || $value->status == \null ) 
+                && ($value->education_id == Auth::user()->eduaction || $value->education_id == \null));
         });
         // $result->merge($forms)
 
@@ -54,38 +55,40 @@ class AnswearController extends Controller
      */
     public function store(StoreAnswearRequest $request)
     {
-
+        // return $request;
         // $request->validate([
         //     "form_id" => "required",
         //     "options.*.question_id" => "required",
         //     "options.*.answear" => "required",
         // ]);
 
-        if(Form::where('id', $request->form_id)->get('user_id') == Auth::id()){
-            return \response()->json(["message" => "Pemiliki tidak diperbolehkan mengisi angket yang dimiliki"]);
-        }
+        // return Form::where('id', $request->form_id)->first('user_id');
+
+        // if(Form::where('id', $request->form_id)->first('user_id')->user_id == Auth::id()){
+        //     return \response()->json(["message" => "Pemiliki tidak diperbolehkan mengisi angket yang dimiliki"]);
+        // }
         
         $activity = Activity::create([
             "user_id" => Auth::id(),
             "form_id" => $request->form_id
         ]);
-    
 
         foreach($request->options as $option){
-            if((int)Question::where('id', $option['question_id'])->get('tipe')[0]->tipe == 3){
+            // return $option;
+            if((int)Question::where('id', $option['question_id'])->get('tipe')[0]->tipe == 3 || (int)Question::where('id', $option['question_id'])->get('tipe')[0]->tipe == 2){
+                // return $option;
                 Answear::create([
-                    "content" => $option['answear'],
+                    "content" => $option['data']['answer'],
                     "activity_id" => $activity->id,
                     "question_id" => $option['question_id']
                 ]);
-
                 continue;
             }
 
-            foreach($option['answear'] as $answear){
+            foreach($option['data']['answer'] as $answer){
                 Answear::create([
                     "activity_id" => $activity->id,
-                    "option_id" => $answear,
+                    "option_id" => $answer,
                     "question_id" => $option['question_id']
                 ]);
             }

@@ -25,7 +25,8 @@ class FormStore{
             'description' => $request->description,
             'slug' => $slug,
             'age_id' => $age->id,
-            'status' => $request->status
+            'status' => $request->status,
+            'education_id' => $request->education,
         ];
 
         if($isPublish){
@@ -42,13 +43,13 @@ class FormStore{
 
             $quest = self::storeQuestion($question, $form);
 
-            if(!$question['options']){
+            if($question['type'] == 3){
                 continue;
             }
 
             foreach($question['options'] as $option){
                 Option::create([
-                    'content' => $option,
+                    'content' => $option['content'],
                     'question_id' => $quest->id
                 ]);
             }
@@ -60,7 +61,7 @@ class FormStore{
     private static function storeQuestion($question, $form){
         return Question::create([
             'content' => $question['content'],
-            'tipe' => $question['tipe'],
+            'tipe' => $question['type'],
             'form_id' => $form->id
         ]);
     }

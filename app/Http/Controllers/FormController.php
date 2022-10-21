@@ -13,6 +13,7 @@ use Dotenv\Validator as DotenvValidator;
 use Exception;
 use FormStore;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
 class FormController extends Controller
 {
@@ -23,7 +24,7 @@ class FormController extends Controller
      */
     public function index()
     {
-        $forms = DB::table('forms')->where('user_id', Auth::id())->paginate(8);
+        $forms = DB::table('forms')->where('user_id', Auth::id())->latest()->paginate(8);
 
         return \response()->json($forms);
     }
@@ -46,6 +47,7 @@ class FormController extends Controller
      */
     public function store(StoreFormRequest $request)
     {
+        // return $request;
 
         $slug = Slug::create();
         
@@ -112,5 +114,15 @@ class FormController extends Controller
 
         Form::destroy($form->id);
         return \response()->json(['message' => 'Form Deleted'], 200);
+    }
+
+    public function changePoint(Request $request){
+        // return \response()->json($request->id);
+        $form = Form::find($request->id);
+
+        $form->points = $request->point;
+        $form->save();
+
+        return $request;
     }
 }

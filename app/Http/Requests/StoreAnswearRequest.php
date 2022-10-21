@@ -26,7 +26,7 @@ class StoreAnswearRequest extends FormRequest
         return [
             "form_id" => "required",
             "options.*.question_id" => "required",
-            "options.*.answear" => "required",
+            "options.*.data.answer" => "required",
         ];
     }
 }
